@@ -37,7 +37,7 @@ class AddressServiceTest {
         Page<Address> addresses = addressService.searchAddresses(request, null);
 
         // Then
-        assertThat(addresses.getSize()).isEqualTo(3);
+        assertThat(addresses.getTotalElements()).isEqualTo(3);
     }
 
     @DisplayName("단일 주소를 조회하면 해당 ID값의 주소를 리턴받음")
