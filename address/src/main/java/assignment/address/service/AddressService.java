@@ -21,10 +21,7 @@ public class AddressService {
     private final AddressRepository addressRepository;
 
     public Page<ResponseAddressDto> searchAddresses(Pageable pageable, String keyword) {
-        if (keyword == null) {
-            keyword = "";
-        }
-        return addressRepository.findByNameContaining(keyword, pageable).map(ResponseAddressDto::from);
+        return addressRepository.findByNameContaining(pageable, keyword).map(ResponseAddressDto::from);
     }
 
     public ResponseAddressDto getAddress(Long addressId) {
@@ -33,12 +30,14 @@ public class AddressService {
         return ResponseAddressDto.from(findAddress.get());
     }
 
+    @Transactional
     public ResponseAddressDto saveAddress(RequestAddressDto requestAddressDto) {
         return ResponseAddressDto.from(addressRepository.save(Address.of(requestAddressDto.getName(),
                 requestAddressDto.getPhoneNumber(),
                 requestAddressDto.getResidence())));
     }
 
+    @Transactional
     public ResponseAddressDto updateAddress(Long addressId, RequestAddressDto requestAddressDto) {
         Optional<Address> findAddress = addressRepository.findById(addressId);
         validateAddress(findAddress);
@@ -46,6 +45,7 @@ public class AddressService {
         return ResponseAddressDto.from(findAddress.get());
     }
 
+    @Transactional
     public void deleteAddress(Long addressId) {
         addressRepository.deleteById(addressId);
     }
