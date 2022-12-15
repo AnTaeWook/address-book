@@ -21,10 +21,7 @@ public class AddressService {
     private final AddressRepository addressRepository;
 
     public Page<ResponseAddressDto> searchAddresses(Pageable pageable, String keyword) {
-        if (keyword == null) {
-            keyword = "";
-        }
-        return addressRepository.findByNameContaining(keyword, pageable).map(ResponseAddressDto::from);
+        return addressRepository.findByNameContaining(pageable, keyword).map(ResponseAddressDto::from);
     }
 
     public ResponseAddressDto getAddress(Long addressId) {
