@@ -1,7 +1,8 @@
 package assignment.address.service;
 
 import assignment.address.domain.Address;
-import assignment.address.dto.AddressDto;
+import assignment.address.dto.RequestAddressDto;
+import assignment.address.dto.ResponseAddressDto;
 import assignment.address.repository.AddressRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,30 +20,30 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
 
-    public Page<Address> searchAddresses(Pageable pageable, String keyword) {
+    public Page<ResponseAddressDto> searchAddresses(Pageable pageable, String keyword) {
         if (keyword == null) {
             keyword = "";
         }
-        return addressRepository.findByNameContaining(keyword, pageable);
+        return addressRepository.findByNameContaining(keyword, pageable).map(ResponseAddressDto::from);
     }
 
-    public Address getAddress(Long addressId) {
+    public ResponseAddressDto getAddress(Long addressId) {
         Optional<Address> findAddress = addressRepository.findById(addressId);
         validateAddress(findAddress);
-        return findAddress.get();
+        return ResponseAddressDto.from(findAddress.get());
     }
 
-    public Address saveAddress(AddressDto addressDto) {
-        return addressRepository.save(Address.of(addressDto.getName(),
-                addressDto.getPhoneNumber(),
-                addressDto.getResidence()));
+    public ResponseAddressDto saveAddress(RequestAddressDto requestAddressDto) {
+        return ResponseAddressDto.from(addressRepository.save(Address.of(requestAddressDto.getName(),
+                requestAddressDto.getPhoneNumber(),
+                requestAddressDto.getResidence())));
     }
 
-    public Address updateAddress(Long addressId, AddressDto addressDto) {
+    public ResponseAddressDto updateAddress(Long addressId, RequestAddressDto requestAddressDto) {
         Optional<Address> findAddress = addressRepository.findById(addressId);
         validateAddress(findAddress);
-        update(addressDto, findAddress.get());
-        return findAddress.get();
+        update(requestAddressDto, findAddress.get());
+        return ResponseAddressDto.from(findAddress.get());
     }
 
     public void deleteAddress(Long addressId) {
@@ -55,7 +56,7 @@ public class AddressService {
         }
     }
 
-    private void update(AddressDto from, Address to) {
+    private void update(RequestAddressDto from, Address to) {
         to.setName(from.getName());
         to.setPhoneNumber(from.getPhoneNumber());
         to.setResidence(from.getResidence());
