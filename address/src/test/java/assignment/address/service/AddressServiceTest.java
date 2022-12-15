@@ -35,7 +35,7 @@ class AddressServiceTest {
 
         // When
         PageRequest request = PageRequest.of(0, 10, Sort.by("name"));
-        Page<ResponseAddressDto> responseAddressDtos = addressService.searchAddresses(request, null);
+        Page<ResponseAddressDto> responseAddressDtos = addressService.searchAddresses(request, "");
 
         // Then
         assertThat(responseAddressDtos.getTotalElements()).isEqualTo(3);
