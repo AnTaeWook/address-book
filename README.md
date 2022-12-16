@@ -23,6 +23,7 @@ RestAPI 기반 CRUD 서비스를 제공하는 서버입니다
 - page: 페이지 번호
 - size: 한 페이지에 노출할 주소 건수
 - sort: 정렬 조건
+- keyword: 이름 포함 조건 검색(default = "")
 
 ---
 
