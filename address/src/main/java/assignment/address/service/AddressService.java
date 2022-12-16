@@ -39,15 +39,21 @@ public class AddressService {
 
     @Transactional
     public ResponseAddressDto updateAddress(Long addressId, RequestAddressDto requestAddressDto) {
-        Optional<Address> findAddress = addressRepository.findById(addressId);
-        validateAddress(findAddress);
-        update(requestAddressDto, findAddress.get());
-        return ResponseAddressDto.from(findAddress.get());
+        Address address = getAddressWithId(addressId);
+        update(requestAddressDto, address);
+        return ResponseAddressDto.from(address);
     }
 
     @Transactional
     public void deleteAddress(Long addressId) {
-        addressRepository.deleteById(addressId);
+        Address address = getAddressWithId(addressId);
+        addressRepository.delete(address);
+    }
+
+    private Address getAddressWithId(Long addressId) {
+        Optional<Address> findAddress = addressRepository.findById(addressId);
+        validateAddress(findAddress);
+        return findAddress.get();
     }
 
     private void validateAddress(Optional<Address> findAddress) {
