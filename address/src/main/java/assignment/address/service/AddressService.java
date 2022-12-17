@@ -25,9 +25,7 @@ public class AddressService {
     }
 
     public ResponseAddressDto getAddress(Long addressId) {
-        Optional<Address> findAddress = addressRepository.findById(addressId);
-        validateAddress(findAddress);
-        return ResponseAddressDto.from(findAddress.get());
+        return ResponseAddressDto.from(getAddressWithId(addressId));
     }
 
     @Transactional
