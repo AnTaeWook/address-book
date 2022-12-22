@@ -5,11 +5,11 @@ RestAPI 기반 CRUD 서비스를 제공하는 서버입니다
 ---
 
 ## API 명세
-> GET /addresses : 레시피 전체 조회 <br/><br/>
-> GET /addresses/{address-id} : 단일 레시피 조회 <br/><br/>
-> POST /addresses : 레피시 등록 <br/><br/>
-> PUT /addresses/{address-id} : 단일 레시피 수정 <br/><br/>
-> DELETE /addresses/{address-id} : 단일 레시피 삭제 <br/>
+> GET /addresses : 주소록 전체 조회 <br/><br/>
+> GET /addresses/{address-id} : 단일 주소록 조회 <br/><br/>
+> POST /addresses : 주소록 등록 <br/><br/>
+> PUT /addresses/{address-id} : 단일 주소록 수정 <br/><br/>
+> DELETE /addresses/{address-id} : 단일 주소록 삭제 <br/>
 
 <br/>
 
