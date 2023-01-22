@@ -3,15 +3,14 @@ package assignment.address.service;
 import assignment.address.domain.Address;
 import assignment.address.dto.RequestAddressDto;
 import assignment.address.dto.ResponseAddressDto;
+import assignment.address.global.code.UserErrorCode;
+import assignment.address.global.exception.NoSuchAddressException;
 import assignment.address.repository.AddressRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -37,9 +36,13 @@ public class AddressService {
 
     @Transactional
     public ResponseAddressDto updateAddress(Long addressId, RequestAddressDto requestAddressDto) {
-        Address address = getAddressWithId(addressId);
-        update(requestAddressDto, address);
-        return ResponseAddressDto.from(address);
+        Address address = Address.builder()
+                .id(addressId)
+                .name(requestAddressDto.getName())
+                .phoneNumber(requestAddressDto.getPhoneNumber())
+                .residence(requestAddressDto.getResidence())
+                .build();
+        return ResponseAddressDto.from(addressRepository.save(address));
     }
 
     @Transactional
@@ -49,20 +52,8 @@ public class AddressService {
     }
 
     private Address getAddressWithId(Long addressId) {
-        Optional<Address> findAddress = addressRepository.findById(addressId);
-        validateAddress(findAddress);
-        return findAddress.get();
-    }
-
-    private void validateAddress(Optional<Address> findAddress) {
-        if (findAddress.isEmpty()) {
-            throw new EntityNotFoundException("해당 ID에 해당하는 주소가 존재하지 않습니다");
-        }
-    }
-
-    private void update(RequestAddressDto from, Address to) {
-        to.setName(from.getName());
-        to.setPhoneNumber(from.getPhoneNumber());
-        to.setResidence(from.getResidence());
+        return addressRepository.findById(addressId).orElseThrow(() -> new NoSuchAddressException(
+                UserErrorCode.NO_SUCH_ADDRESS
+        ));
     }
 }
